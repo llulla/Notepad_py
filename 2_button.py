@@ -16,5 +16,20 @@ btn3.pack()
 
 btn4 = Button(root, width=10, height=3, text="btn4")
 btn4.pack()
+
+btn5 = Button(root, fg="red", bg="yellow", text="btn5")
+btn5.pack()
+
+photo = PhotoImage(file="button.png")
+btn6 = Button(root, image=photo)
+btn6.pack()
+
+def btncmd():
+    print('click the btn')
+
+btn7 = Button(root, text="동작버튼", command=btncmd)
+btn7.pack()
+
+
 root.mainloop() # 창이 닫히지 않도록
 
