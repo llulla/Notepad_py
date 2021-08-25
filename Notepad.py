@@ -12,25 +12,38 @@
 6. 프로그램 크기, 위치는 자유롭게 하되 크기 조정은 가능해야 함
 7. 본문 우측에 상하 스크롤 바 넣기"""
 import os
+from pathlib import Path
+import tkinter.ttk as ttk
 from tkinter import *
+from tkinter import filedialog
+from typing import AnyStr
 
 root = Tk()
 
+fof=[]
 
+filename = "제목없음"
 
-filename = "mynote.txt"
-
-root.title("제목없음 - Windows 메모장") #실행 파일 이름
+root.title(filename+ " - Windows 메모장") #실행 파일 이름
 root.geometry("640x480") #창 크기
 
 #메뉴
 menu = Menu(root)
 
 def open_file():
-    if os.path.isfile(filename):
-        with open(filename, "r", encoding="utf=8")as file:
-            txt.delete("1.0",END)
-            txt.insert(END, file.read())
+    file=filedialog.askopenfilename(title="txt파일을 선택하세요", \
+        filetypes=(("txt문서","*.txt"),("모든파일","*.*")), initialdir=r"D:\study_2107\GUI_tkinter\Notepad")
+
+    with open(file, "r", encoding="utf=8") as of:
+        txt.delete("1.0",END)
+        txt.insert(END, of.read())
+
+        filename = str(of)
+        fof = filename.split("'")
+        filename = Path(fof[1]).stem
+
+        root.title(filename+ " - Windows 메모장") #실행 파일 이름
+                
 
 def save_file():
     with open(filename, "w", encoding="utf=8")as file:
@@ -45,9 +58,13 @@ menu_file.add_separator()
 menu_file.add_command(label="Exit", command=root.quit)
 
 menu.add_cascade(label="파일", menu=menu_file)
-
+ 
 #메뉴 - 편집
-menu.add_cascade(label="편집", menu=menu_file)
+menu_edit = Menu(menu, tearoff=0)
+menu_edit.add_command(label="Select All", command=all)
+menu.add_cascade(label="편집", menu=menu_edit)
+
+
 #메뉴 - 서식
 menu.add_cascade(label="서식", menu=menu_file)
 
@@ -68,5 +85,5 @@ scrollbar.pack(side="right", fill="y")
 txt = Text(root)
 txt.pack(side="left",fill="both", expand=True)
 
-scrollbar.config(command=txt.yview)
+scrollbar.config(command=txt.yview)  
 root.mainloop() # 창이 닫히지 않도록
